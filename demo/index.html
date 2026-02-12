@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GPU World Generator - Mixed Forest 3D Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <p class="eyebrow">GPU World Generator</p>
+        <h1>Procedural Surface + Hex LOD Demo</h1>
+        <p class="tagline">
+          Deterministic surface fields with post rules for materials and features. Hexes
+          are used only for LOD zoning around the viewport.
+        </p>
+      </header>
+
+      <section class="panel">
+        <div class="controls">
+          <label>
+            Mode
+            <select id="mode">
+              <option value="fractal">Fractal Surface</option>
+              <option value="hex">Hex Terrain</option>
+            </select>
+          </label>
+          <label>
+            Terrain Seed
+            <input id="terrainSeed" type="number" min="1" max="999999" value="1337" />
+          </label>
+          <label>
+            Feature Seed
+            <input id="featureSeed" type="number" min="1" max="999999" value="4242" />
+          </label>
+          <label>
+            Foliage Seed
+            <input id="foliageSeed" type="number" min="1" max="999999" value="7331" />
+          </label>
+          <label>
+            Radius / Extent
+            <input id="radius" type="range" min="3" max="10" value="6" />
+            <span id="radiusValue" class="value">6</span>
+          </label>
+          <label class="toggle">
+            <input id="heatmapToggle" type="checkbox" />
+            Height Heatmap
+          </label>
+          <button id="regen" class="button">Regenerate</button>
+          <button id="bakeFractal" class="button">Bake Fractal</button>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="view"></canvas>
+          <div id="fps" class="fps">FPS: --</div>
+          <div class="legend">
+            <span class="swatch grass">Grass</span>
+            <span class="swatch dirt">Dirt</span>
+            <span class="swatch sand">Sand</span>
+            <span class="swatch rock">Rock</span>
+            <span class="swatch water">Water</span>
+            <span class="swatch mud">Mud</span>
+          </div>
+        </div>
+        <p id="status" class="note">Booting WebGPU…</p>
+      </section>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

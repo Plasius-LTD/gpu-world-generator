@@ -1,0 +1,44 @@
+{
+  "name": "@plasius/gpu-world-generator",
+  "version": "0.0.0",
+  "description": "GPU-assisted world generation with hex-grid terrain synthesis.",
+  "type": "module",
+  "sideEffects": false,
+  "private": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "files": [
+    "dist",
+    "src",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./terrain.wgsl": "./dist/terrain.wgsl",
+    "./field.wgsl": "./dist/field.wgsl",
+    "./fractal-prepass.wgsl": "./dist/fractal-prepass.wgsl",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup && cp src/terrain.wgsl dist/terrain.wgsl && cp src/field.wgsl dist/field.wgsl && cp src/fractal-prepass.wgsl dist/fractal-prepass.wgsl",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@plasius/gpu-worker": "^0.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  },
+  "license": "Apache-2.0"
+  ,
+  "publishConfig": {
+    "access": "public"
+  }
+}
