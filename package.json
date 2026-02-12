@@ -1,6 +1,6 @@
 {
   "name": "@plasius/gpu-world-generator",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "GPU-assisted world generation with hex-grid terrain synthesis.",
   "type": "module",
   "sideEffects": false,
