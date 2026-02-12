@@ -1,0 +1,8 @@
+node_modules/
+demo/node_modules/
+dist/
+coverage/
+backup/
+*.log
+.DS_Store
+.npm-cache/
