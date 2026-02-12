@@ -41,5 +41,13 @@
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Plasius-LTD/gpu-world-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Plasius-LTD/gpu-world-generator/issues"
+  },
+  "homepage": "https://github.com/Plasius-LTD/gpu-world-generator#readme"
 }
