@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+- **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [0.0.3] - 2026-02-12
+
 ### Added
 - Initial scaffold for GPU world generation package.
 - WGSL terrain job (height/heat/moisture/biome).
@@ -27,3 +41,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **Security**
   - (placeholder)
+[0.0.3]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.3
