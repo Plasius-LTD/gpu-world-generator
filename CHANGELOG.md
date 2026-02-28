@@ -32,6 +32,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Security**
   - (placeholder)
 
+## [0.0.5] - 2026-02-28
+
+- **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
 ## [0.0.4] - 2026-02-12
 
 - **Added**
