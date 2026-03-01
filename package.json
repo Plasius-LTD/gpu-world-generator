@@ -26,6 +26,12 @@
   },
   "scripts": {
     "build": "tsup && cp src/terrain.wgsl dist/terrain.wgsl && cp src/field.wgsl dist/field.wgsl && cp src/fractal-prepass.wgsl dist/fractal-prepass.wgsl",
+    "typecheck": "tsc --noEmit",
+    "audit:eslint": "eslint . --max-warnings=0",
+    "audit:deps": "npm ls --all --omit=optional --omit=peer > /dev/null 2>&1 || true",
+    "audit:npm": "npm audit --audit-level=high --omit=dev",
+    "audit:test": "npm run test:coverage",
+    "lint": "eslint . --max-warnings=0",
     "test": "node --test",
     "test:coverage": "c8 --reporter=lcov --reporter=text node --test",
     "pack:check": "node scripts/verify-public-package.cjs",
@@ -35,8 +41,13 @@
     "@plasius/gpu-worker": "^0.1.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
     "@types/node": "^22.10.0",
     "c8": "^10.1.3",
+    "eslint": "^9.39.1",
+    "globals": "^17.3.0",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3"
   },

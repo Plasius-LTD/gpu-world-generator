@@ -68,6 +68,16 @@ npm install
 npm run dev
 ```
 
+## Development Checks
+
+```sh
+npm run lint
+npm run typecheck
+npm run test:coverage
+npm run build
+npm run pack:check
+```
+
 ## Notes
 - For Vite/Pnpm setups, raw WGSL import is the most reliable.
 - See `docs/plan.md` for hierarchy and biome rules.
