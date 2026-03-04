@@ -18,6 +18,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Security**
   - (placeholder)
 
+## [0.0.10] - 2026-03-04
+
+- **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
 ## [0.0.6] - 2026-03-01
 
 - **Added**
@@ -101,3 +115,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.4]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.4
 [0.0.5]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.5
 [0.0.6]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.6
+[0.0.10]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.10
