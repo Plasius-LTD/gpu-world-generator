@@ -6,3 +6,8 @@ backup/
 *.log
 .DS_Store
 .npm-cache/
+
+# Private key material in cert directories (never commit)
+**/certs/**/*-key.pem
+**/certs/**/*.key
+**/certs/**/*.p8
