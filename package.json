@@ -1,6 +1,6 @@
 {
   "name": "@plasius/gpu-world-generator",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "GPU-assisted world generation with hex-grid terrain synthesis.",
   "type": "module",
   "sideEffects": false,
@@ -38,7 +38,7 @@
     "prepublishOnly": "npm run build && npm run pack:check"
   },
   "dependencies": {
-    "@plasius/gpu-worker": "^0.1.4"
+    "@plasius/gpu-worker": "^0.1.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
