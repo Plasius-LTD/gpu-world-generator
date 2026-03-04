@@ -18,6 +18,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Security**
   - (placeholder)
 
+## [0.0.6] - 2026-03-01
+
+- **Added**
+  - `lint`, `typecheck`, and security audit scripts for local and CI enforcement.
+
+- **Changed**
+  - CI now fails early on lint/typecheck/runtime dependency audit before build/test.
+
+- **Fixed**
+  - Pack-check regex cleanup to remove an unnecessary path escape.
+
+- **Security**
+  - Runtime dependency vulnerability checks are now enforced in CI.
+
 ## [0.0.5] - 2026-02-28
 
 - **Added**
@@ -86,3 +100,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.3]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.3
 [0.0.4]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.4
 [0.0.5]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.5
+[0.0.6]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.6
