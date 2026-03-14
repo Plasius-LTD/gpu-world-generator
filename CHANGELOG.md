@@ -7,10 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 - **Added**
-  - (placeholder)
+  - Added worker profile and manifest exports for `streaming` and `bake`
+    world-generation DAGs.
+  - Added tests covering chunk/voxel dependency ordering, queue metadata, and
+    profile validation.
+  - Added ADR, TDR, and design docs for worker-first world-generation
+    scheduling.
 
 - **Changed**
-  - (placeholder)
+  - Clarified README guidance for integrating chunk and voxel generation with
+    `@plasius/gpu-worker`, `@plasius/gpu-performance`, and `@plasius/gpu-debug`.
 
 - **Fixed**
   - (placeholder)

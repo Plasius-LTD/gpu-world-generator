@@ -59,6 +59,28 @@ const { levelSpec, cells, terrain } = generateTemperateMixedForest({
 import terrainWgsl from "@plasius/gpu-world-generator/terrain.wgsl?raw";
 ```
 
+## Worker DAG Manifests
+
+`@plasius/gpu-world-generator` now publishes worker-first generation manifests
+so chunk and voxel work can be scheduled as a multi-root DAG instead of a flat
+queue.
+
+```js
+import { getWorldGeneratorWorkerManifest } from "@plasius/gpu-world-generator";
+
+const streaming = getWorldGeneratorWorkerManifest();
+const bake = getWorldGeneratorWorkerManifest("bake");
+
+console.log(streaming.jobs.map((job) => job.worker.jobType));
+console.log(bake.jobs.find((job) => job.key === "assetSerialize"));
+```
+
+- `streaming` models runtime chunk generation and mesh materialization.
+- `bake` extends the DAG with asset serialization for background/offline output.
+- Jobs include queue class, priority, dependencies, adaptive budget ladders, and
+  debug allocation tags for integration with `@plasius/gpu-performance` and
+  `@plasius/gpu-debug`.
+
 ## Demo
 The WebGPU mixed-forest demo lives in `demo/`. Run it with:
 
@@ -81,3 +103,5 @@ npm run pack:check
 ## Notes
 - For Vite/Pnpm setups, raw WGSL import is the most reliable.
 - See `docs/plan.md` for hierarchy and biome rules.
+- See `docs/design/worker-manifest-integration.md` for the chunk/voxel DAG
+  contract.

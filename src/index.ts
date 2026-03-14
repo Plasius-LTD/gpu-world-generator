@@ -9,3 +9,4 @@ export * from "./fractal-prepass";
 export * from "./tiles";
 export * from "./tile-cache";
 export * from "./mesh";
+export * from "./worker";
