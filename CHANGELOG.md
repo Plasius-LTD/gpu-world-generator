@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 - **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [0.0.11] - 2026-03-14
+
+- **Added**
   - Added worker profile and manifest exports for `streaming` and `bake`
     world-generation DAGs.
   - Added tests covering chunk/voxel dependency ordering, queue metadata, and
@@ -127,3 +141,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.5]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.5
 [0.0.6]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.6
 [0.0.10]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.10
+[0.0.11]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.11
