@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Goal
 
@@ -50,3 +50,11 @@ Unit tests should prove that:
 - horizon representations can be low-frequency and still remain valid render
   products
 - RT proxy descriptors can differ from the raster-facing representation tier
+
+## Implementation Notes
+
+The first public implementation now ships as
+`createWorldGeneratorRepresentationPlan(...)`. It publishes explicit near, mid,
+far, and horizon descriptors, exposes distinct raster and RT proxy outputs,
+retains chunk identity for proxy products, and includes refresh cadence,
+shadow-source relevance, and scheduling metadata for downstream packages.

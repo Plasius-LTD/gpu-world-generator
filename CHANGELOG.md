@@ -9,9 +9,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Added**
   - ADR, TDR, and test-first planning coverage for chunk representation tiers,
     RT proxies, and far-field world outputs.
+  - Added `createWorldGeneratorRepresentationPlan(...)` plus public
+    representation-band exports for near, mid, far, and horizon chunk outputs.
+  - Added tests covering explicit RT proxy descriptors, far/horizon cadence and
+    shadow metadata, and chunk-identity preservation through proxy outputs.
 
 - **Changed**
-  - (placeholder)
+  - TDR-0002 now reflects the implemented public representation-plan helper.
 
 - **Fixed**
   - (placeholder)

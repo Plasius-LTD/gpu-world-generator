@@ -6,6 +6,69 @@ export type WorldGeneratorWorkerAuthority =
   | "non-authoritative-simulation"
   | "authoritative";
 export type WorldGeneratorWorkerImportance = "medium" | "high" | "critical";
+export type WorldGeneratorRepresentationBand =
+  | "near"
+  | "mid"
+  | "far"
+  | "horizon";
+export type WorldGeneratorRepresentationOutput =
+  | "liveGeometry"
+  | "simplifiedGeometry"
+  | "rtProxy"
+  | "mergedProxy"
+  | "horizonShell";
+export type WorldGeneratorRepresentationRtParticipation =
+  | "full"
+  | "selective"
+  | "proxy"
+  | "disabled";
+export type WorldGeneratorRepresentationShadowRelevance =
+  | "ray-traced-primary"
+  | "selective-raster"
+  | "proxy-caster"
+  | "baked-impression";
+
+export interface WorldGeneratorRepresentationCadence {
+  readonly kind: "per-frame" | "interval";
+  readonly divisor: number;
+}
+
+export interface WorldGeneratorRepresentationDescriptor {
+  readonly id: string;
+  readonly chunkId: string;
+  readonly profile: WorldGeneratorWorkerProfileName;
+  readonly band: WorldGeneratorRepresentationBand;
+  readonly output: WorldGeneratorRepresentationOutput;
+  readonly rasterMode:
+    | "full-live"
+    | "simplified-live"
+    | "proxy"
+    | "not-rendered"
+    | "horizon-shell";
+  readonly rtParticipation: WorldGeneratorRepresentationRtParticipation;
+  readonly shadowRelevance: WorldGeneratorRepresentationShadowRelevance;
+  readonly refreshCadence: WorldGeneratorRepresentationCadence;
+  readonly preservesChunkIdentity: boolean;
+  readonly sourceChunkIds: readonly string[];
+  readonly sourceJobKeys: readonly string[];
+  readonly suggestedAllocationIds: readonly string[];
+  readonly scheduling: Readonly<{
+    owner: "renderer";
+    queueClass: typeof worldGeneratorWorkerQueueClass;
+    priorityHint: number;
+    gameplayImportance: WorldGeneratorWorkerImportance;
+    representationBand: WorldGeneratorRepresentationBand;
+  }>;
+}
+
+export interface WorldGeneratorRepresentationPlan {
+  readonly schemaVersion: 1;
+  readonly owner: typeof worldGeneratorDebugOwner;
+  readonly profile: WorldGeneratorWorkerProfileName;
+  readonly chunkId: string;
+  readonly representations: readonly WorldGeneratorRepresentationDescriptor[];
+  readonly bands: readonly WorldGeneratorRepresentationBand[];
+}
 
 export interface WorldGeneratorWorkerBudgetLevelConfig {
   maxDispatchesPerFrame: number;
@@ -75,6 +138,28 @@ export interface WorldGeneratorWorkerManifest {
 export const worldGeneratorDebugOwner = "world-generator";
 export const worldGeneratorWorkerQueueClass = "voxel";
 export const defaultWorldGeneratorWorkerProfile = "streaming";
+export const worldGeneratorRepresentationBands = Object.freeze([
+  "near",
+  "mid",
+  "far",
+  "horizon",
+]) as readonly WorldGeneratorRepresentationBand[];
+export const worldGeneratorRepresentationOutputs = Object.freeze([
+  "liveGeometry",
+  "simplifiedGeometry",
+  "rtProxy",
+  "mergedProxy",
+  "horizonShell",
+]) as readonly WorldGeneratorRepresentationOutput[];
+
+const worldGeneratorRepresentationBandPriorityHints: Readonly<
+  Record<WorldGeneratorRepresentationBand, number>
+> = Object.freeze({
+  near: 400,
+  mid: 300,
+  far: 200,
+  horizon: 100,
+});
 
 type WorkerLevelSpec = Omit<WorldGeneratorWorkerBudgetLevel, "config"> & {
   config: Omit<WorldGeneratorWorkerBudgetLevelConfig, "metadata">;
@@ -95,6 +180,66 @@ type WorkerProfileSpec = {
   suggestedAllocationIds: readonly string[];
   jobs: Readonly<Record<string, WorkerJobSpec>>;
 };
+
+function assertWorldGeneratorIdentifier(name: string, value: unknown) {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new Error(`${name} must be a non-empty string.`);
+  }
+  return value.trim();
+}
+
+function normalizeWorldGeneratorImportance(
+  name: string,
+  value: unknown
+): WorldGeneratorWorkerImportance {
+  if (value === "medium" || value === "high" || value === "critical") {
+    return value;
+  }
+  throw new Error(`${name} must be one of: medium, high, critical.`);
+}
+
+function buildWorldGeneratorRepresentationDescriptor(
+  options: {
+    profile: WorldGeneratorWorkerProfileName;
+    chunkId: string;
+    band: WorldGeneratorRepresentationBand;
+    output: WorldGeneratorRepresentationOutput;
+    rasterMode: WorldGeneratorRepresentationDescriptor["rasterMode"];
+    rtParticipation: WorldGeneratorRepresentationRtParticipation;
+    shadowRelevance: WorldGeneratorRepresentationShadowRelevance;
+    refreshCadence: WorldGeneratorRepresentationCadence;
+    preservesChunkIdentity: boolean;
+    sourceJobKeys: readonly string[];
+    gameplayImportance: WorldGeneratorWorkerImportance;
+    suggestedAllocationIds: readonly string[];
+  }
+): WorldGeneratorRepresentationDescriptor {
+  return Object.freeze({
+    id: `${options.chunkId}.${options.band}.${options.output}`,
+    chunkId: options.chunkId,
+    profile: options.profile,
+    band: options.band,
+    output: options.output,
+    rasterMode: options.rasterMode,
+    rtParticipation: options.rtParticipation,
+    shadowRelevance: options.shadowRelevance,
+    refreshCadence: Object.freeze({
+      kind: options.refreshCadence.kind,
+      divisor: options.refreshCadence.divisor,
+    }),
+    preservesChunkIdentity: options.preservesChunkIdentity,
+    sourceChunkIds: Object.freeze([options.chunkId]),
+    sourceJobKeys: Object.freeze([...options.sourceJobKeys]),
+    suggestedAllocationIds: Object.freeze([...options.suggestedAllocationIds]),
+    scheduling: Object.freeze({
+      owner: "renderer",
+      queueClass: worldGeneratorWorkerQueueClass,
+      priorityHint: worldGeneratorRepresentationBandPriorityHints[options.band],
+      gameplayImportance: options.gameplayImportance,
+      representationBand: options.band,
+    }),
+  });
+}
 
 function buildBudgetLevels(
   jobType: string,
@@ -707,4 +852,127 @@ export function getWorldGeneratorWorkerManifest(
     );
   }
   return manifest;
+}
+
+export function createWorldGeneratorRepresentationPlan(options: {
+  profile?: WorldGeneratorWorkerProfileName;
+  chunkId: string;
+  gameplayImportance?: WorldGeneratorWorkerImportance;
+}): WorldGeneratorRepresentationPlan {
+  const profile =
+    options.profile ?? defaultWorldGeneratorWorkerProfile;
+  const spec = worldGeneratorWorkerProfileSpecs[profile];
+  if (!spec) {
+    const available = worldGeneratorWorkerProfileNames.join(", ");
+    throw new Error(
+      `Unknown world-generator worker profile "${profile}". Available: ${available}.`
+    );
+  }
+
+  const chunkId = assertWorldGeneratorIdentifier("chunkId", options.chunkId);
+  const gameplayImportance = normalizeWorldGeneratorImportance(
+    "gameplayImportance",
+    options.gameplayImportance ?? "high"
+  );
+
+  const highValueAllocations = spec.suggestedAllocationIds;
+  const farFieldAllocations = spec.suggestedAllocationIds.filter(
+    (allocationId) =>
+      allocationId.includes("mesh") ||
+      allocationId.includes("asset") ||
+      allocationId.includes("tile")
+  );
+
+  const bakeSourceJobKeys =
+    profile === "bake"
+      ? ["meshBuild", "tileBake", "assetSerialize"]
+      : ["meshBuild", "tileBake"];
+
+  const representations = Object.freeze([
+    buildWorldGeneratorRepresentationDescriptor({
+      profile,
+      chunkId,
+      band: "near",
+      output: "liveGeometry",
+      rasterMode: "full-live",
+      rtParticipation: "full",
+      shadowRelevance: "ray-traced-primary",
+      refreshCadence: { kind: "per-frame", divisor: 1 },
+      preservesChunkIdentity: true,
+      sourceJobKeys: ["meshBuild"],
+      gameplayImportance:
+        gameplayImportance === "medium" ? "high" : gameplayImportance,
+      suggestedAllocationIds: highValueAllocations,
+    }),
+    buildWorldGeneratorRepresentationDescriptor({
+      profile,
+      chunkId,
+      band: "mid",
+      output: "simplifiedGeometry",
+      rasterMode: "simplified-live",
+      rtParticipation: "selective",
+      shadowRelevance: "selective-raster",
+      refreshCadence: { kind: "interval", divisor: 2 },
+      preservesChunkIdentity: true,
+      sourceJobKeys: ["meshBuild"],
+      gameplayImportance,
+      suggestedAllocationIds: highValueAllocations,
+    }),
+    buildWorldGeneratorRepresentationDescriptor({
+      profile,
+      chunkId,
+      band: "mid",
+      output: "rtProxy",
+      rasterMode: "not-rendered",
+      rtParticipation: "proxy",
+      shadowRelevance: "selective-raster",
+      refreshCadence: { kind: "interval", divisor: 2 },
+      preservesChunkIdentity: true,
+      sourceJobKeys: ["meshBuild", "tileBake"],
+      gameplayImportance,
+      suggestedAllocationIds: highValueAllocations,
+    }),
+    buildWorldGeneratorRepresentationDescriptor({
+      profile,
+      chunkId,
+      band: "far",
+      output: "mergedProxy",
+      rasterMode: "proxy",
+      rtParticipation: "proxy",
+      shadowRelevance: "proxy-caster",
+      refreshCadence: { kind: "interval", divisor: 8 },
+      preservesChunkIdentity: true,
+      sourceJobKeys: bakeSourceJobKeys,
+      gameplayImportance: "medium",
+      suggestedAllocationIds:
+        farFieldAllocations.length > 0 ? farFieldAllocations : highValueAllocations,
+    }),
+    buildWorldGeneratorRepresentationDescriptor({
+      profile,
+      chunkId,
+      band: "horizon",
+      output: "horizonShell",
+      rasterMode: "horizon-shell",
+      rtParticipation: "disabled",
+      shadowRelevance: "baked-impression",
+      refreshCadence: { kind: "interval", divisor: 60 },
+      preservesChunkIdentity: true,
+      sourceJobKeys:
+        profile === "bake" ? ["tileBake", "assetSerialize"] : ["tileBake"],
+      gameplayImportance: "medium",
+      suggestedAllocationIds:
+        farFieldAllocations.length > 0 ? farFieldAllocations : highValueAllocations,
+    }),
+  ] satisfies readonly WorldGeneratorRepresentationDescriptor[]);
+
+  return Object.freeze({
+    schemaVersion: 1,
+    owner: worldGeneratorDebugOwner,
+    profile,
+    chunkId,
+    representations,
+    bands: Object.freeze(
+      [...new Set(representations.map((representation) => representation.band))]
+    ),
+  });
 }

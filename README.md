@@ -81,6 +81,30 @@ console.log(bake.jobs.find((job) => job.key === "assetSerialize"));
   debug allocation tags for integration with `@plasius/gpu-performance` and
   `@plasius/gpu-debug`.
 
+## Render Representation Plans
+
+`@plasius/gpu-world-generator` now also publishes explicit chunk
+representation-tier plans so renderer and worker packages can coordinate near,
+mid, far, and horizon outputs without guessing from distance alone.
+
+```js
+import { createWorldGeneratorRepresentationPlan } from "@plasius/gpu-world-generator";
+
+const plan = createWorldGeneratorRepresentationPlan({
+  chunkId: "hex-12-9",
+  profile: "streaming",
+  gameplayImportance: "critical",
+});
+
+console.log(plan.bands);
+console.log(plan.representations.find((entry) => entry.output === "rtProxy"));
+```
+
+Each plan exposes raster-facing and RT-facing outputs separately, plus refresh
+cadence, shadow relevance, chunk-identity preservation, and scheduling metadata
+that downstream renderer and worker packages can prioritize by band and
+importance.
+
 ## Demo
 The WebGPU mixed-forest demo lives in `demo/`. Run it with:
 
