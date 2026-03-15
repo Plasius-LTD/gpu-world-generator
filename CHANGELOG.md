@@ -7,7 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 - **Added**
-  - (placeholder)
+  - ADR, TDR, and test-first planning coverage for chunk representation tiers,
+    RT proxies, and far-field world outputs.
 
 - **Changed**
   - (placeholder)
