@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 - **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [0.0.12] - 2026-03-15
+
+- **Added**
   - ADR, TDR, and test-first planning coverage for chunk representation tiers,
     RT proxies, and far-field world outputs.
   - Added `createWorldGeneratorRepresentationPlan(...)` plus public
@@ -147,3 +161,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.6]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.6
 [0.0.10]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.10
 [0.0.11]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.11
+[0.0.12]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.12
