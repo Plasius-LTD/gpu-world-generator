@@ -270,7 +270,6 @@ export function serializeTileAssetBinary(asset: TileAsset): ArrayBuffer {
   view.setUint32(cursor, materialStride >>> 0, true);
   cursor += 4;
   view.setUint32(cursor, featureStride >>> 0, true);
-  cursor += 4;
 
   let writeOffset = HEADER_BYTES;
   new Float32Array(buffer, writeOffset, heightCount).set(asset.height);
@@ -351,7 +350,6 @@ export function parseTileAssetBinary(input: ArrayBuffer | ArrayBufferView): Tile
   const materialStride = view.getUint32(cursor, true);
   cursor += 4;
   const featureStride = view.getUint32(cursor, true);
-  cursor += 4;
 
   const heightBytes = heightCount * 4;
   const fieldBytes = fieldCount * 4;
