@@ -26,6 +26,7 @@
   },
   "scripts": {
     "build": "tsup && cp src/terrain.wgsl dist/terrain.wgsl && cp src/field.wgsl dist/field.wgsl && cp src/fractal-prepass.wgsl dist/fractal-prepass.wgsl",
+    "demo": "python3 -m http.server --directory ..",
     "typecheck": "tsc --noEmit",
     "audit:eslint": "eslint . --max-warnings=0",
     "audit:deps": "npm ls --all --omit=optional --omit=peer > /dev/null 2>&1 || true",
@@ -38,6 +39,7 @@
     "prepublishOnly": "npm run build && npm run pack:check"
   },
   "dependencies": {
+    "@plasius/gpu-shared": "^0.1.2",
     "@plasius/gpu-worker": "^0.1.11"
   },
   "devDependencies": {
