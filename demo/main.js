@@ -56,7 +56,7 @@ function describeState(state, scene) {
     notes: [
       "The demo path is now static-server friendly and no longer depends on TypeScript source imports or raw WGSL module transforms in the browser.",
       "gpu-world-generator still owns the representation-band and worker-manifest logic shown here.",
-      "Stress mode shifts the demo to the bake profile so near/far representation policy is easy to compare.",
+      "Stress mode shifts the demo to the bake profile so near/far representation policy is easy to compare while the harbor keeps its painterly night read.",
     ],
     textState: {
       chunkId: representationPlan.chunkId,
@@ -80,7 +80,7 @@ await mountGpuShowcase({
   packageName: "@plasius/gpu-world-generator",
   title: "World Representation Harbor Validation",
   subtitle:
-    "A shared 3D harbor scene driven by gpu-world-generator chunk representation bands, cadence policy, and worker manifests.",
+    "A moonlit shared harbor scene driven by gpu-world-generator chunk representation bands, cadence policy, and worker manifests.",
   createState,
   updateState,
   describeState,
