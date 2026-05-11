@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - (placeholder)
 
 - **Fixed**
+  - Parenthesized terrain hash multiplication terms before xor mixing so
+    browsers accept assembled WGSL worker shaders.
   - (placeholder)
 
 - **Security**
