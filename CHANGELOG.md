@@ -13,6 +13,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - (placeholder)
 
 - **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [0.0.15] - 2026-05-11
+
+- **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
   - Parenthesized terrain hash multiplication terms before xor mixing so
     browsers accept assembled WGSL worker shaders.
   - (placeholder)
@@ -194,3 +208,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.12]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.12
 [0.0.13]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.13
 [0.0.14]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.14
+[0.0.15]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.15
