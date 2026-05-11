@@ -173,7 +173,7 @@ fn hash_cell(cell: HexCell, seed: u32, salt: u32) -> f32 {
   let q = u32(bitcast<u32>(cell.q));
   let r = u32(bitcast<u32>(cell.r));
   let lvl = u32(bitcast<u32>(cell.level));
-  let mixed = q * 1664525u ^ r * 1013904223u ^ lvl * 747796405u ^ seed ^ salt;
+  let mixed = (q * 1664525u) ^ (r * 1013904223u) ^ (lvl * 747796405u) ^ seed ^ salt;
   return hash01(mixed);
 }
 

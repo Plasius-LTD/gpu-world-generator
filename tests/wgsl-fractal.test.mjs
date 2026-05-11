@@ -161,6 +161,19 @@ test("WGSL loaders throw for non-ok responses", async () => {
   );
 });
 
+test("terrain WGSL parenthesizes hash multiplication terms before xor mixing", async () => {
+  const terrain = await loadTerrainWgsl({ fetcher: null });
+
+  assert.match(
+    terrain,
+    /let mixed = \(q \* 1664525u\) \^ \(r \* 1013904223u\) \^ \(lvl \* 747796405u\) \^ seed \^ salt;/
+  );
+  assert.doesNotMatch(
+    terrain,
+    /let mixed = q \* 1664525u \^ r \* 1013904223u \^ lvl \* 747796405u \^ seed \^ salt;/
+  );
+});
+
 test("fractal asset serialization validates shape and metadata", () => {
   const sampleCount = (2 + 1) * (2 + 1) * FRACTAL_SAMPLE_STRIDE;
   const samples = new Float32Array(sampleCount);
