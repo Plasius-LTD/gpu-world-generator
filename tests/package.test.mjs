@@ -8,7 +8,13 @@ const pkg = JSON.parse(
 
 test("package metadata exposes published entry points", () => {
   assert.equal(pkg.name, "@plasius/gpu-world-generator");
+  assert.equal(pkg.types, "./dist/index.d.ts");
   assert.ok(pkg.exports["."], "root export must be present");
+  assert.equal(
+    pkg.exports["."].types,
+    "./dist/index.d.ts",
+    "root export must expose the declaration entry"
+  );
   assert.ok(pkg.exports["./terrain.wgsl"], "terrain shader export must be present");
   assert.ok(pkg.exports["./field.wgsl"], "field shader export must be present");
   assert.ok(
