@@ -17,6 +17,8 @@ function main() {
   const files = Array.isArray(parsed) && parsed[0]?.files ? parsed[0].files : [];
   const paths = files.map((entry) => entry.path);
 
+  ensureTarballIncludes(paths, "dist/index.d.ts");
+
   const forbiddenTarballPathPatterns = [
     {
       label: "private monorepo path",
@@ -106,6 +108,13 @@ function parseNpmPackJson(rawOutput) {
 
   const jsonSlice = rawOutput.slice(start, end + 1);
   return JSON.parse(jsonSlice);
+}
+
+function ensureTarballIncludes(paths, requiredPath) {
+  if (!paths.includes(requiredPath)) {
+    console.error(`Public package check failed. npm pack output is missing ${requiredPath}.`);
+    process.exit(1);
+  }
 }
 
 function scanCodeReferences(roots, extensions, patterns) {
