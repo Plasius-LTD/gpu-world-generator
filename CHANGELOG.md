@@ -13,6 +13,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - (placeholder)
 
 - **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [0.0.18] - 2026-05-22
+
+- **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
   - Exported the root `dist/index.d.ts` declaration entry for NodeNext TypeScript consumers and pack-time validation.
   - (placeholder)
 
@@ -240,3 +254,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.15]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.15
 [0.0.16]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.16
 [0.0.17]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.17
+[0.0.18]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.18
