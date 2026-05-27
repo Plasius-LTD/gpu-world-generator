@@ -1,3 +1,21 @@
+import {
+  getWorldGeneratorDefaultTranslation,
+  worldGeneratorEnGbTranslations,
+  worldGeneratorTranslations,
+  worldGeneratorWorkerProfileDescriptionKeys,
+  worldGeneratorWorkerTranslationKeys,
+} from "./worker.translations";
+import type { WorldGeneratorWorkerTranslationKey } from "./worker.translations";
+
+export {
+  getWorldGeneratorDefaultTranslation,
+  worldGeneratorEnGbTranslations,
+  worldGeneratorTranslations,
+  worldGeneratorWorkerProfileDescriptionKeys,
+  worldGeneratorWorkerTranslationKeys,
+};
+export type { WorldGeneratorWorkerTranslationKey };
+
 export type WorldGeneratorWorkerQueueClass = "voxel";
 export type WorldGeneratorWorkerProfileName = "streaming" | "bake";
 export type WorldGeneratorWorkerDomain = "geometry" | "textures" | "custom";
@@ -93,6 +111,8 @@ export interface WorldGeneratorWorkerBudgetLevel {
 export interface WorldGeneratorWorkerProfile {
   readonly name: WorldGeneratorWorkerProfileName;
   readonly description: string;
+  readonly descriptionKey: WorldGeneratorWorkerTranslationKey;
+  readonly descriptionDefault: string;
   readonly jobs: readonly string[];
 }
 
@@ -129,6 +149,8 @@ export interface WorldGeneratorWorkerManifest {
   readonly owner: typeof worldGeneratorDebugOwner;
   readonly profile: WorldGeneratorWorkerProfileName;
   readonly description: string;
+  readonly descriptionKey: WorldGeneratorWorkerTranslationKey;
+  readonly descriptionDefault: string;
   readonly queueClass: typeof worldGeneratorWorkerQueueClass;
   readonly schedulerMode: "dag";
   readonly suggestedAllocationIds: readonly string[];
@@ -176,7 +198,7 @@ type WorkerJobSpec = {
 };
 
 type WorkerProfileSpec = {
-  description: string;
+  descriptionKey: WorldGeneratorWorkerTranslationKey;
   suggestedAllocationIds: readonly string[];
   jobs: Readonly<Record<string, WorkerJobSpec>>;
 };
@@ -274,8 +296,7 @@ const worldGeneratorWorkerProfileSpecs: Record<
   WorkerProfileSpec
 > = {
   streaming: {
-    description:
-      "Runtime chunk generation DAG for fractal prepass, terrain synthesis, voxel materialization, mesh build, and tile bake.",
+    descriptionKey: worldGeneratorWorkerProfileDescriptionKeys.streaming,
     suggestedAllocationIds: [
       "world.chunk.field.scratch",
       "world.chunk.height.buffer",
@@ -478,8 +499,7 @@ const worldGeneratorWorkerProfileSpecs: Record<
     },
   },
   bake: {
-    description:
-      "Offline tile bake DAG for terrain generation, voxel materialization, mesh build, and asset serialization.",
+    descriptionKey: worldGeneratorWorkerProfileDescriptionKeys.bake,
     suggestedAllocationIds: [
       "world.bake.field.scratch",
       "world.bake.height.buffer",
@@ -730,9 +750,12 @@ function buildWorldGeneratorWorkerProfile(
   name: WorldGeneratorWorkerProfileName,
   spec: WorkerProfileSpec
 ) {
+  const descriptionDefault = getWorldGeneratorDefaultTranslation(spec.descriptionKey);
   return Object.freeze({
     name,
-    description: spec.description,
+    description: descriptionDefault,
+    descriptionKey: spec.descriptionKey,
+    descriptionDefault,
     jobs: Object.freeze(Object.keys(spec.jobs)),
   });
 }
@@ -784,11 +807,14 @@ function buildWorldGeneratorWorkerManifest(
   name: WorldGeneratorWorkerProfileName,
   spec: WorkerProfileSpec
 ) {
+  const descriptionDefault = getWorldGeneratorDefaultTranslation(spec.descriptionKey);
   return Object.freeze({
     schemaVersion: 1,
     owner: worldGeneratorDebugOwner,
     profile: name,
-    description: spec.description,
+    description: descriptionDefault,
+    descriptionKey: spec.descriptionKey,
+    descriptionDefault,
     queueClass: worldGeneratorWorkerQueueClass,
     schedulerMode: "dag",
     suggestedAllocationIds: Object.freeze([...spec.suggestedAllocationIds]),

@@ -80,6 +80,26 @@ console.log(bake.jobs.find((job) => job.key === "assetSerialize"));
 - Jobs include queue class, priority, dependencies, adaptive budget ladders, and
   debug allocation tags for integration with `@plasius/gpu-performance` and
   `@plasius/gpu-debug`.
+- DAG profiles expose `descriptionKey` and `descriptionDefault` alongside the
+  existing `description` field. Register `worldGeneratorTranslations` with
+  `@plasius/translations` when rendering those descriptions:
+
+```js
+import { createI18n } from "@plasius/translations";
+import {
+  getWorldGeneratorWorkerManifest,
+  worldGeneratorTranslations,
+} from "@plasius/gpu-world-generator";
+
+const i18n = createI18n({
+  language: "en-GB",
+  fallback: "en-GB",
+  translations: worldGeneratorTranslations,
+});
+const manifest = getWorldGeneratorWorkerManifest();
+
+console.log(i18n.t(manifest.descriptionKey));
+```
 
 ## Render Representation Plans
 
