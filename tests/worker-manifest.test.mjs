@@ -1,11 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createI18n } from "@plasius/translations";
 import {
   defaultWorldGeneratorWorkerProfile,
   getWorldGeneratorWorkerManifest,
   getWorldGeneratorWorkerProfile,
   worldGeneratorDebugOwner,
+  worldGeneratorEnGbTranslations,
+  worldGeneratorTranslations,
   worldGeneratorWorkerManifests,
+  worldGeneratorWorkerTranslationKeys,
   worldGeneratorWorkerProfileNames,
   worldGeneratorWorkerProfiles,
   worldGeneratorWorkerQueueClass,
@@ -17,6 +21,10 @@ test("world-generator worker profiles expose streaming and bake DAGs", () => {
   assert.deepEqual(worldGeneratorWorkerProfiles.streaming, {
     name: "streaming",
     description:
+      "Runtime chunk generation DAG for fractal prepass, terrain synthesis, voxel materialization, mesh build, and tile bake.",
+    descriptionKey:
+      worldGeneratorWorkerTranslationKeys.profileStreamingDescription,
+    descriptionDefault:
       "Runtime chunk generation DAG for fractal prepass, terrain synthesis, voxel materialization, mesh build, and tile bake.",
     jobs: [
       "fractalPrepass",
@@ -36,6 +44,38 @@ test("world-generator worker profiles expose streaming and bake DAGs", () => {
     "tileBake",
     "assetSerialize",
   ]);
+});
+
+test("world-generator worker descriptions expose translation keys and defaults", () => {
+  const streaming = getWorldGeneratorWorkerProfile("streaming");
+  const bake = getWorldGeneratorWorkerManifest("bake");
+
+  assert.equal(
+    streaming.descriptionKey,
+    worldGeneratorWorkerTranslationKeys.profileStreamingDescription
+  );
+  assert.equal(streaming.description, streaming.descriptionDefault);
+  assert.equal(
+    worldGeneratorEnGbTranslations[streaming.descriptionKey],
+    streaming.descriptionDefault
+  );
+  assert.equal(
+    bake.descriptionKey,
+    worldGeneratorWorkerTranslationKeys.profileBakeDescription
+  );
+  assert.equal(
+    worldGeneratorEnGbTranslations[bake.descriptionKey],
+    bake.descriptionDefault
+  );
+
+  const i18n = createI18n({
+    language: "en-GB",
+    fallback: "en-GB",
+    translations: worldGeneratorTranslations,
+  });
+
+  assert.equal(i18n.t(streaming.descriptionKey), streaming.descriptionDefault);
+  assert.equal(i18n.t(bake.descriptionKey), bake.descriptionDefault);
 });
 
 test("world-generator worker manifests publish queue, dependencies, and authorities", () => {

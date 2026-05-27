@@ -7,10 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 - **Added**
-  - (placeholder)
+  - Added `en-GB` translation keys and defaults for worker DAG profile descriptions.
 
 - **Changed**
-  - (placeholder)
+  - Worker profiles and manifests now expose `descriptionKey` and `descriptionDefault` so consumers can resolve display descriptions through `@plasius/translations`.
 
 - **Fixed**
   - Exported the root `dist/index.d.ts` declaration entry for NodeNext TypeScript consumers and pack-time validation.
