@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Worker profiles and manifests now expose `descriptionKey` and `descriptionDefault` so consumers can resolve display descriptions through `@plasius/translations`.
 
 - **Fixed**
+  - Restored the package CD workflow so protected main releases are prepared by PR and published without direct branch pushes.
   - Exported the root `dist/index.d.ts` declaration entry for NodeNext TypeScript consumers and pack-time validation.
   - (placeholder)
 
