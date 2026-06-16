@@ -8,9 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **Added**
   - Added `en-GB` translation keys and defaults for worker DAG profile descriptions.
+  - Added `createWorldGeneratorWavefrontSceneSourceAdapter(...)` so live
+    terrain, RT proxy, merged proxy, and horizon-shell outputs can emit
+    wavefront-compatible scene-source payloads with chunk, cadence, and
+    material-id metadata.
 
 - **Changed**
   - Worker profiles and manifests now expose `descriptionKey` and `descriptionDefault` so consumers can resolve display descriptions through `@plasius/translations`.
+  - Render representation plans now have a package-owned adapter path into the
+    wavefront renderer boundary instead of requiring site-local mapping glue.
 
 - **Fixed**
   - Restored the package CD workflow so protected main releases are prepared by PR and published without direct branch pushes.

@@ -5,3 +5,4 @@
 - [ADR-0003: Terrain Generation Style Mixing (Shader-Based)](./adr-0003-terrain-generation-style-mixing.md)
 - [ADR-0004: Worker DAG Manifests for Chunk and Voxel Generation](./adr-0004-worker-dag-manifests-for-chunk-and-voxel-generation.md)
 - [ADR-0005: Render Representation Tiers and Proxy Outputs](./adr-0005-render-representation-tiers-and-proxy-outputs.md)
+- [ADR-0006: Wavefront Scene-Source Adapters For Terrain And Proxy Outputs](./adr-0006-wavefront-scene-source-adapters.md)

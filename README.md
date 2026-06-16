@@ -125,6 +125,44 @@ cadence, shadow relevance, chunk-identity preservation, and scheduling metadata
 that downstream renderer and worker packages can prioritize by band and
 importance.
 
+## Wavefront Scene Source Adapters
+
+`@plasius/gpu-world-generator` also publishes a renderer-facing adapter helper
+so terrain and proxy meshes can move into the wavefront path without site-local
+contract glue.
+
+```js
+import {
+  createWorldGeneratorRepresentationPlan,
+  createWorldGeneratorWavefrontSceneSourceAdapter,
+} from "@plasius/gpu-world-generator";
+
+const plan = createWorldGeneratorRepresentationPlan({
+  chunkId: "hex-12-9",
+  profile: "streaming",
+});
+const representation = plan.representations.find(
+  (entry) => entry.output === "liveGeometry"
+);
+
+const adapter = createWorldGeneratorWavefrontSceneSourceAdapter({
+  representation,
+  mesh: {
+    materialIds: ["terrain.grass", "terrain.rock"],
+    positions: [-1, 0, -1, 1, 0, -1, 1, 0, 1],
+    indices: [0, 1, 2],
+  },
+});
+
+console.log(adapter.mesh.representationOutput);
+console.log(adapter.mesh.refreshCadence);
+```
+
+The adapter preserves representation band, source chunk ids, source job keys,
+material ids, RT participation, shadow relevance, and cadence so downstream
+renderer packages can map live terrain, RT proxies, merged proxies, and horizon
+shells to stable scene-source records.
+
 ## Demo
 The WebGPU mixed-forest demo lives in `demo/`. Run it with:
 
