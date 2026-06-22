@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 - **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [0.0.22] - 2026-06-22
+
+- **Added**
   - Added `en-GB` translation keys and defaults for worker DAG profile descriptions.
   - Added `createWorldGeneratorWavefrontSceneSourceAdapter(...)` so live
     terrain, RT proxy, merged proxy, and horizon-shell outputs can emit
@@ -247,3 +261,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.15]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.15
 [0.0.16]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.16
 [0.0.17]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.17
+[0.0.22]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.22
