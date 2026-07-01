@@ -41,8 +41,8 @@
     "prepublishOnly": "npm run build && npm run pack:check"
   },
   "dependencies": {
-    "@plasius/gpu-shared": "^0.1.9",
-    "@plasius/gpu-worker": "^0.1.15"
+    "@plasius/gpu-shared": "^1.0.2",
+    "@plasius/gpu-worker": "^0.3.4"
   },
   "peerDependencies": {
     "@plasius/translations": "^1.0.17"
