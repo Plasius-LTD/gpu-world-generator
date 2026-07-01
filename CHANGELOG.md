@@ -10,6 +10,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - (placeholder)
 
 - **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [0.0.24] - 2026-07-01
+
+- **Added**
+  - (placeholder)
+
+- **Changed**
   - Updated runtime GPU dependencies to `@plasius/gpu-shared` `^1.0.2` and
     `@plasius/gpu-worker` `^0.3.4`.
   - (placeholder)
@@ -279,3 +293,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.17]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.17
 [0.0.22]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.22
 [0.0.23]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.23
+[0.0.24]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.24
