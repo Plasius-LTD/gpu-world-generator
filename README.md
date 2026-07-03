@@ -8,13 +8,103 @@
 [![Security Policy](https://img.shields.io/badge/security%20policy-yes-orange.svg)](./SECURITY.md)
 [![Changelog](https://img.shields.io/badge/changelog-md-blue.svg)](./CHANGELOG.md)
 
-GPU-assisted world generation focused on hex-grid terrain synthesis. This package targets pre-generation of terrain height/heat/biome layers using WebGPU compute jobs (compatible with `@plasius/gpu-worker`).
+GPU-assisted world generation focused on voxel-first terrain, biome synthesis,
+and renderer-ready derived outputs. Voxel chunks are the authoritative world
+state; heightfields, meshes, proxy outputs, and decorations are derived from
+seeded chunks plus edit journals.
 
 ## Goals
-- Hierarchical hex grid (1000 km² regional zones down to ~10 m² tiles).
-- 3D heat-map based terrain synthesis (height = depth, heat = biome driver).
-- Extensible biome classification (tundra, savanna, river, city, village, ice, snow, mountainous, volcanic, road, town, castle, etc).
-- Shader-first pipeline with CPU fallback helpers.
+- Voxel chunks for mining, destruction, caves, overhangs, sinkholes, lava
+  deposits, and underground content.
+- Full climate coverage across polar, cold temperate, temperate, arid,
+  tropical, alpine, volcanic, freshwater, coastal, urban, and underground
+  worlds.
+- Renderer-ready XZ ground plane / +Y up outputs.
+- Decorative and world-affecting instance generation for trees, shrubs, grass,
+  water, snow, rocks, crystals, lava cracks, and related biome content.
+- Shader-first pipeline with CPU fallback helpers and compatibility exports.
+
+## Voxel World Authority
+
+The preferred API is voxel-first:
+
+```js
+import {
+  applyVoxelEditJournal,
+  buildVoxelCollisionMesh,
+  buildVoxelRenderSurfaces,
+  buildVoxelSurfaceMesh,
+  createVoxelFluidSimulationInputs,
+  createVoxelEditJournal,
+  generateWorldDecorations,
+  getVoxelEditDirtyChunkKeys,
+  materializeVoxelChunk,
+} from "@plasius/gpu-world-generator";
+
+const chunk = materializeVoxelChunk({
+  key: { seed: 20260702, cx: 0, cy: 0, cz: 0 },
+  climate: "temperate",
+});
+
+const journal = createVoxelEditJournal(chunk.key, [
+  {
+    id: "mine-entrance",
+    kind: "subtractBrush",
+    brush: { center: [12, 9, 14], radius: 3 },
+  },
+]);
+
+const { chunk: editedChunk, delta } = applyVoxelEditJournal(chunk, journal);
+const dirtyChunks = getVoxelEditDirtyChunkKeys(chunk.key, chunk.spec, journal.edits);
+const mesh = buildVoxelSurfaceMesh(editedChunk, { journals: [journal] });
+const collider = buildVoxelCollisionMesh(editedChunk);
+const decorations = generateWorldDecorations(editedChunk);
+const fluidInputs = createVoxelFluidSimulationInputs(editedChunk, { journals: [journal] });
+const renderSurfaces = buildVoxelRenderSurfaces(editedChunk, { journals: [journal] });
+
+console.log(
+  mesh.materialIds,
+  collider.exposedFaceCount,
+  dirtyChunks.chunkKeys.length,
+  decorations.instances.length,
+  fluidInputs.sourceSinks.length,
+  renderSurfaces.fluids.length,
+  delta.dirtyMin
+);
+```
+
+Chunks use signed density, where `density >= 0` is solid. Runtime deformation
+is represented by ordered edit journals over deterministic base chunks.
+Chunks own voxel cells; render meshing reads a shared lattice with a one-voxel
+halo so adjacent chunks sample identical world-space boundary densities instead
+of using skirts or filler geometry. `buildVoxelSurfaceMesh(...)` is the smooth
+render surface; use `buildVoxelCollisionMesh(...)` for gameplay collision
+because it emits shared, axis-aligned exterior faces from solid voxels so rigid
+bodies cannot fall through visual spacing between individual samples. Runtime
+tools should mark every chunk from `getVoxelEditDirtyChunkKeys(...)` for rebuild
+after an edit, including halo-only neighbors.
+
+## Fluid-Aware Rendering
+
+Voxel materials still include water, lava, and sludge so biome rules, edit
+journals, and resource layers can describe fluid placement. Rendering keeps
+those fluids separate from solid terrain:
+
+- `buildVoxelSurfaceMesh(...)` and `materializeVoxelMeshingField(...)` exclude
+  liquid materials by default, so terrain triangles are never painted as water,
+  lava, or sludge.
+- `buildVoxelFluidBoundaryField(...)` emits solid non-liquid voxel boundaries
+  for `@plasius/gpu-fluid`.
+- `createVoxelFluidSimulationInputs(...)` emits fluid volume buffers,
+  source/sink edits, boundary metadata, and dirty chunk keys for simulation.
+- `buildVoxelRenderSurfaces(...)` returns separate `terrain`, `fluids`,
+  `overlays`, and `decorations` payloads.
+- `createVoxelMaterialPalette(...)` exposes terrain PBR-style material profiles
+  and fluid material ids that map to `@plasius/gpu-fluid` water, lava, and
+  sludge render materials.
+
+This prevents the “blue mountain” failure mode: water and lava are simulation
+surfaces/volumes derived from voxel state, not arbitrary solid terrain colors.
 
 ## Layered Fractal Model
 Generation now uses three explicit fractal layers:
@@ -164,7 +254,8 @@ renderer packages can map live terrain, RT proxies, merged proxies, and horizon
 shells to stable scene-source records.
 
 ## Demo
-The WebGPU mixed-forest demo lives in `demo/`. Run it with:
+The voxel world demo lives in `demo/`. It renders package-generated climates,
+world materials, decorative layers, and deformation tools. Run it with:
 
 ```
 cd demo

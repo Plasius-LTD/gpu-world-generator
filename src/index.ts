@@ -11,3 +11,4 @@ export * from "./tile-cache";
 export * from "./mesh";
 export * from "./worker";
 export * from "./render-adapter";
+export * from "./voxels";

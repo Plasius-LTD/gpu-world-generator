@@ -7,9 +7,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 - **Added**
+  - Added voxel-first world generation APIs for deterministic chunks, climate
+    profiles, signed densities, material ids, edit journals, surface mesh
+    extraction, and biome-driven decorations.
+  - Added block-accurate voxel collision mesh extraction for gameplay physics
+    surfaces derived from the authoritative chunk.
+  - Added stitchable voxel meshing field APIs with one-voxel halo sampling and
+    dirty chunk helpers for edit-driven rebuilds.
+  - Added fluid-aware voxel rendering APIs, including voxel fluid boundary
+    fields, fluid simulation inputs, separate terrain/fluid render surfaces,
+    and terrain material palettes.
+  - Added voxel source metadata to wavefront scene-source adapters.
+  - Added `@plasius/gpu-fluid` as the fluid integration dependency.
+  - Added ADR-0007, ADR-0008, and voxel-world design documentation for voxel
+    authority and fluid-aware rendering.
   - (placeholder)
 
 - **Changed**
+  - Repositioned voxel chunks as the preferred authoritative world path while
+    retaining legacy heightfield helpers for compatibility.
+  - Replaced the demo with a voxel world viewer that supports climates,
+    deformation tools, debug views, LOD views, and world/decorative layers.
+  - Updated the demo terrain renderer to draw the smoothed surface-net mesh
+    while still generating a conservative voxel collider for gameplay support.
+  - Changed surface-net extraction to sample shared world-space lattice fields
+    so adjacent chunks can stitch without skirts or filler geometry.
+  - Changed voxel render meshing to exclude liquid materials by default so
+    water, lava, and sludge render through separate fluid surfaces instead of
+    terrain triangles.
+  - Updated the demo to report and draw terrain and fluid surfaces separately.
   - (placeholder)
 
 - **Fixed**
