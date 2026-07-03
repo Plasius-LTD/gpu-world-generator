@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 - **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [0.0.25] - 2026-07-03
+
+- **Added**
   - Added voxel-first world generation APIs for deterministic chunks, climate
     profiles, signed densities, material ids, edit journals, surface mesh
     extraction, and biome-driven decorations.
@@ -320,3 +334,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.22]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.22
 [0.0.23]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.23
 [0.0.24]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.24
+[0.0.25]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.25
