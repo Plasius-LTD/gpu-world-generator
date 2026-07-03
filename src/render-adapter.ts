@@ -6,6 +6,8 @@ import type {
   WorldGeneratorRepresentationRtParticipation,
   WorldGeneratorRepresentationShadowRelevance,
 } from "./worker";
+import { WORLD_GENERATOR_COORDINATE_CONVENTION } from "./voxels";
+import type { VoxelChunkKey } from "./voxels";
 
 export interface WorldGeneratorWavefrontSceneSourceMeshInput {
   id: string;
@@ -30,6 +32,17 @@ export interface WorldGeneratorWavefrontSceneSourceMeshInput {
     scale: readonly [number, number] | readonly number[];
   }>;
   indices: readonly number[];
+  coordinateConvention: typeof WORLD_GENERATOR_COORDINATE_CONVENTION;
+  voxelSource: Readonly<{
+    enabled: boolean;
+    chunkKeys: readonly VoxelChunkKey[];
+    materialPaletteId: string | null;
+    decorationLayerIds: readonly string[];
+    dirtyRegion: Readonly<{
+      min: readonly [number, number, number];
+      max: readonly [number, number, number];
+    }> | null;
+  }>;
 }
 
 export interface WorldGeneratorWavefrontSceneSourceAdapterOutput {
@@ -82,6 +95,32 @@ function normalizeUpdateClass(
   return "streaming";
 }
 
+function validateMeshShape(mesh: {
+  positions: readonly number[];
+  normals?: readonly number[] | null;
+  uvs?: readonly number[] | null;
+  indices: readonly number[];
+}) {
+  if (mesh.positions.length % 3 !== 0) {
+    throw new Error("mesh.positions length must be divisible by 3.");
+  }
+  if (mesh.normals && mesh.normals.length !== mesh.positions.length) {
+    throw new Error("mesh.normals length must match mesh.positions length.");
+  }
+  if (mesh.uvs && mesh.uvs.length % 2 !== 0) {
+    throw new Error("mesh.uvs length must be divisible by 2.");
+  }
+  if (mesh.indices.length % 3 !== 0) {
+    throw new Error("mesh.indices length must be divisible by 3.");
+  }
+  const vertexCount = mesh.positions.length / 3;
+  for (const index of mesh.indices) {
+    if (!Number.isInteger(index) || index < 0 || index >= vertexCount) {
+      throw new Error("mesh.indices must reference existing vertices.");
+    }
+  }
+}
+
 export function createWorldGeneratorWavefrontSceneSourceAdapter(options: {
   representation: WorldGeneratorRepresentationDescriptor;
   mesh: {
@@ -93,10 +132,12 @@ export function createWorldGeneratorWavefrontSceneSourceAdapter(options: {
     uvs?: readonly number[] | null;
     derivableUvs?: Partial<WorldGeneratorWavefrontSceneSourceMeshInput["derivableUvs"]> | null;
     indices: readonly number[];
+    voxelSource?: Partial<WorldGeneratorWavefrontSceneSourceMeshInput["voxelSource"]> | null;
   };
   accelerationStructureUpdateClass?: WorldGeneratorWavefrontSceneSourceMeshInput["accelerationStructureUpdateClass"];
 }): WorldGeneratorWavefrontSceneSourceAdapterOutput {
   const { representation } = options;
+  validateMeshShape(options.mesh);
   const mesh = Object.freeze({
     id:
       options.mesh.id ??
@@ -123,6 +164,29 @@ export function createWorldGeneratorWavefrontSceneSourceAdapter(options: {
     uvs: freezeArray(options.mesh.uvs),
     derivableUvs: normalizeDerivableUvs(options.mesh),
     indices: Object.freeze([...options.mesh.indices]),
+    coordinateConvention: WORLD_GENERATOR_COORDINATE_CONVENTION,
+    voxelSource: Object.freeze({
+      enabled: options.mesh.voxelSource?.enabled ?? false,
+      chunkKeys: Object.freeze(
+        (options.mesh.voxelSource?.chunkKeys ?? []).map((key) => Object.freeze({ ...key }))
+      ),
+      materialPaletteId: options.mesh.voxelSource?.materialPaletteId ?? null,
+      decorationLayerIds: Object.freeze([...(options.mesh.voxelSource?.decorationLayerIds ?? [])]),
+      dirtyRegion: options.mesh.voxelSource?.dirtyRegion
+        ? Object.freeze({
+            min: Object.freeze([
+              options.mesh.voxelSource.dirtyRegion.min[0],
+              options.mesh.voxelSource.dirtyRegion.min[1],
+              options.mesh.voxelSource.dirtyRegion.min[2],
+            ] as const),
+            max: Object.freeze([
+              options.mesh.voxelSource.dirtyRegion.max[0],
+              options.mesh.voxelSource.dirtyRegion.max[1],
+              options.mesh.voxelSource.dirtyRegion.max[2],
+            ] as const),
+          })
+        : null,
+    }),
   });
 
   return Object.freeze({

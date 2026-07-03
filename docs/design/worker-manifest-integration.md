@@ -40,3 +40,7 @@ of the pipeline.
 
 This keeps core terrain correctness stable while allowing runtime pressure
 control to trim mesh and auxiliary output cost first.
+
+`voxelMaterialize` is backed by the public voxel APIs. The stage produces
+signed-density/material chunks, while `meshBuild`, RT proxies, horizon shells,
+previews, and decorations are derived outputs from those voxel chunks.
