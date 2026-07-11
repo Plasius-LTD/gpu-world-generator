@@ -10,6 +10,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - (placeholder)
 
 - **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [0.0.26] - 2026-07-11
+
+- **Added**
+  - (placeholder)
+
+- **Changed**
   - Updated runtime and development dependency baselines to the latest
     compatible published versions, including `@plasius/gpu-fluid` `0.1.12`,
     `@plasius/gpu-shared` `1.0.13`, `@plasius/translations` `1.0.22`,
@@ -342,3 +356,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.23]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.23
 [0.0.24]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.24
 [0.0.25]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.25
+[0.0.26]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.26
