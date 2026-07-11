@@ -10,7 +10,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - (placeholder)
 
 - **Changed**
-  - (placeholder)
+  - Updated runtime and development dependency baselines to the latest
+    compatible published versions, including `@plasius/gpu-fluid` `0.1.12`,
+    `@plasius/gpu-shared` `1.0.13`, `@plasius/translations` `1.0.22`,
+    `@types/node` `26.1.1`, `@typescript-eslint` `8.63.0`, ESLint `10.7.0`,
+    `globals` `17.7.0`, and React `19.2.7`.
+  - Retained TypeScript `6.0.3` because the latest `@typescript-eslint/parser`
+    release currently requires TypeScript below `6.1.0`; TypeScript 7 was
+    rejected by npm's peer-dependency resolver.
 
 - **Fixed**
   - (placeholder)
