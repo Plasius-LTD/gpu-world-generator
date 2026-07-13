@@ -42,11 +42,11 @@
   },
   "dependencies": {
     "@plasius/gpu-fluid": "^0.1.12",
-    "@plasius/gpu-shared": "^1.0.13",
+    "@plasius/gpu-shared": "^1.0.14",
     "@plasius/gpu-worker": "^0.3.4"
   },
   "peerDependencies": {
-    "@plasius/translations": "^1.0.22"
+    "@plasius/translations": "^1.0.23"
   },
   "peerDependenciesMeta": {
     "@plasius/translations": {
@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@plasius/translations": "^1.0.22",
+    "@plasius/translations": "^1.0.23",
     "@types/node": "^26.1.1",
     "@typescript-eslint/eslint-plugin": "^8.63.0",
     "@typescript-eslint/parser": "^8.63.0",
