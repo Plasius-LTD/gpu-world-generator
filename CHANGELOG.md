@@ -11,6 +11,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **Changed**
   - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [0.0.27] - 2026-07-13
+
+- **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
   - Consume the propagated gpu-shared and RFC-remediated translation releases (task #36).
 
 - **Fixed**
@@ -358,3 +372,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.24]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.24
 [0.0.25]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.25
 [0.0.26]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.26
+[0.0.27]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.27
