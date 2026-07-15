@@ -1,7 +1,7 @@
 {
   "name": "@plasius/gpu-world-generator",
   "version": "0.0.27",
-  "description": "GPU-assisted world generation with hex-grid terrain synthesis.",
+  "description": "Deterministic persistent-atlas and voxel world generation with GPU helpers.",
   "type": "module",
   "sideEffects": false,
   "private": false,
@@ -41,6 +41,7 @@
     "prepublishOnly": "npm run build && npm run pack:check"
   },
   "dependencies": {
+    "@plasius/asset-contracts": "^0.3.1",
     "@plasius/gpu-fluid": "^0.1.12",
     "@plasius/gpu-shared": "^1.0.14",
     "@plasius/gpu-worker": "^0.3.4"

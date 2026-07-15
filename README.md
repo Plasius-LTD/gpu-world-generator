@@ -13,6 +13,124 @@ and renderer-ready derived outputs. Voxel chunks are the authoritative world
 state; heightfields, meshes, proxy outputs, and decorations are derived from
 seeded chunks plus edit journals.
 
+## Persistent Zoned Atlas
+
+The versioned world-atlas API describes finite, persistent worlds independently
+from their local voxel materialization. The shipped `origin-shard` contract is a
+100 × 50 km atlas with east–west wrapping and logical polar boundaries:
+
+- 5,000 immutable 1 km tiles;
+- 500,000 aligned 100 m macro zones;
+- 50,000,000 logical 10 m local zones, generated only when requested; and
+- 32 m vertical slabs across the fixed −1,024 m to +2,560 m domain.
+
+`createWorldAtlasBakePlan(...)` and `bakeWorldAtlas(...)` deterministically
+derive the overview, climate, hydrology, geology, biome/flora profiles, and
+content-addressed tile binaries. `decodeWorldTile(...)` validates an untrusted
+tile and can verify its SHA-256 content hash. Address helpers use half-open
+bounds so each point has one owner; X wraps modulo 100,000 m and Z clamps to the
+logical polar interval.
+
+Macro hydrology persists drainage role and Strahler order alongside explicit
+riverbed gravel, floodplain silt/clay, alluvial thickness, bedrock, soil,
+sediment, water-surface height, water-table, and aquifer fields. Local
+materialization therefore samples geological river support rather than
+repainting a generic surface.
+
+```js
+import {
+  bakeWorldAtlas,
+  createWorldAtlasBakePlan,
+  decodeWorldTile,
+  getWorldEditDirtyAddresses,
+} from "@plasius/gpu-world-generator";
+
+const plan = createWorldAtlasBakePlan();
+const result = await bakeWorldAtlas(plan, {
+  tileKeys: [{ tx: 0, tz: 0 }],
+  writeTile: async ({ binary, contentHash }) => {
+    const verified = await decodeWorldTile(binary, { expectedContentHash: contentHash });
+    console.log(verified.key);
+  },
+});
+
+const dirty = getWorldEditDirtyAddresses({
+  schemaVersion: 1,
+  id: "paint-across-seam",
+  worldId: "origin-shard",
+  atlasRevision: plan.atlasRevision,
+  operations: [{
+    kind: "materialPaint",
+    center: [99_999, 1, 15],
+    radiusM: 6,
+    materialId: 4,
+  }],
+});
+```
+
+`WorldSpatialModelInstanceV1` uses canonical model references from
+`@plasius/asset-contracts`; consumers must not invent package-local model
+identities. Atlas density edits also expose mass-closure validation so a shared
+mutable edit log can preserve the accepted world/ledger conservation rule.
+Dirty-address derivation includes the one-metre local sampling halo, including
+wrapped seam neighbours, so cached meshes cannot retain stale boundary samples.
+
+### Zoned Streaming and Residency
+
+`planWorldView(...)` applies the fixed 0.5 m, 1 m, 5 m, 25 m, and 100 m
+representation ladder with 20% transition hysteresis. Plans include coarse
+fallbacks, stable work keys, obsolete-work cancellation, every required owner
+tile, and one horizontal velocity-directed prefetch tile. The published low,
+standard, and high budgets cap CPU/GPU residency at 128/192 MiB, 256/384 MiB,
+and 512/768 MiB with two, four, and eight generation jobs respectively.
+
+`materializeWorldLocalZone(...)` reconstructs only a 32 m slab that intersects
+surface, fluid, or a local edit envelope. Its 0.5 m and 1 m outputs call the same
+world-space density/material sampler, replay ordered edits, consume persisted
+geology, and reconstruct stable flora instances from profile seeds plus
+canonical model references. `assembleWorldZoneGeometry(...)` loads the sampling
+halo and spatial-model owners, deduplicates stable model ids, and emits terrain,
+fluid, and model clip planes against the destination zone.
+
+```js
+import {
+  WORLD_RESIDENCY_BUDGETS,
+  assembleWorldZoneGeometry,
+  materializeWorldLocalZone,
+  planWorldView,
+} from "@plasius/gpu-world-generator";
+
+const view = planWorldView({
+  worldId: "origin-shard",
+  atlasRevision: "origin-shard-2026-07-v1",
+  editRevision: 12,
+  viewpoint: { x: 99_995, y: 24, z: 25_000 },
+  velocity: { x: 8, z: 0 },
+  budget: WORLD_RESIDENCY_BUDGETS.standard,
+});
+
+const chunk = materializeWorldLocalZone({
+  key: view.localChunks[0],
+  tiles: decodedOwnerTiles,
+  edits: orderedTileEdits,
+});
+
+const mesh = assembleWorldZoneGeometry({
+  destination: view.localChunks[0].localZone.zone,
+  tiles: decodedOwnerTiles,
+  metresPerCell: 5,
+});
+```
+
+`WorldResourceResidencyManager` accounts caller-owned CPU/GPU resources,
+enforces concurrent-generation limits, respects pins and references, evicts in
+the documented far-to-model order, and invokes every disposal callback at most
+once.
+
+The package's hex zoning helpers remain supported as a legacy LOD and terrain
+facility. Hex cells are not persistent world addresses and do not replace the
+tile/zone/local-zone hierarchy above.
+
 ## Goals
 - Voxel chunks for mining, destruction, caves, overhangs, sinkholes, lava
   deposits, and underground content.

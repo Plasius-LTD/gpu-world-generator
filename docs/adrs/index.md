@@ -8,3 +8,5 @@
 - [ADR-0006: Wavefront Scene-Source Adapters For Terrain And Proxy Outputs](./adr-0006-wavefront-scene-source-adapters.md)
 - [ADR-0007: Voxel World Authority](./adr-0007-voxel-world-authority.md)
 - [ADR-0008: Fluid-Aware Voxel Rendering](./adr-0008-fluid-aware-voxel-rendering.md)
+- [ADR-0009: Finite Wrapped World Atlas](./adr-0009-finite-wrapped-world-atlas.md)
+- [ADR-0010: Destination-Owned World Streaming](./adr-0010-destination-owned-world-streaming.md)
