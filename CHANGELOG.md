@@ -7,10 +7,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 - **Added**
-  - (placeholder)
+  - Added versioned persistent-atlas contracts for finite wrapped worlds,
+    including tile, zone, local-zone, vertical-slab, model-instance, residency,
+    and edit dirty-address types.
+  - Added deterministic `origin-shard` bake planning and generation for a
+    100 × 50 km atlas with qualified ocean/mountain coverage, blended climate,
+    terminating drainage, Strahler channel roles, explicit riverbed/floodplain
+    strata, biome/flora profiles, and an overview.
+  - Added content-addressed world-tile encoding, strict decoding, SHA-256
+    verification, and deterministic checksum tests.
+  - Added mass-closure validation and seam-aware edit invalidation including
+    the local voxel sampling halo.
+  - Added deterministic view planning with the fixed representation ladder,
+    20% hysteresis, velocity-directed prefetch, obsolete-work cancellation,
+    coarse fallbacks, and low/standard/high hard residency budgets.
+  - Added edit-aware 0.5 m and 1 m local-zone slab materialization, stable flora
+    reconstruction, destination-clipped terrain/fluid assembly, canonical model
+    deduplication with seam-safe render transforms, and a hard-budget resource
+    residency coordinator with non-destructive admission checks.
+  - Hardened tile decoding for nested model transforms, bounds, and LOD hints,
+    and normalized wrapped flora edit placement during reconstruction.
+  - Added ADR-0009, ADR-0010, TDR-0003, and TDR-0004 for finite atlas
+    addressing, immutable bakes, destination ownership, and streaming.
 
 - **Changed**
-  - (placeholder)
+  - Documented hex zoning as a supported legacy LOD facility rather than the
+    persistent world-address system.
+  - Added `@plasius/asset-contracts` as the canonical source of spatial model
+    asset references.
 
 - **Fixed**
   - (placeholder)
