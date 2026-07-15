@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 - **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [0.1.0] - 2026-07-15
+
+- **Added**
   - Added versioned persistent-atlas contracts for finite wrapped worlds,
     including tile, zone, local-zone, vertical-slab, model-instance, residency,
     and edit dirty-address types.
@@ -397,3 +411,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.25]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.25
 [0.0.26]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.26
 [0.0.27]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.27
+[0.1.0]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.1.0
