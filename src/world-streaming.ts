@@ -982,14 +982,52 @@ function modelFingerprint(instance: WorldSpatialModelInstanceV1): string {
   });
 }
 
+function rangesIntersect(
+  leftMin: number,
+  leftMax: number,
+  rightMin: number,
+  rightMax: number,
+): boolean {
+  return leftMax >= rightMin && leftMin <= rightMax;
+}
+
+function wrappedModelXIntersectsBounds(
+  modelMinX: number,
+  modelMaxX: number,
+  bounds: WorldHorizontalBounds,
+): boolean {
+  const widthM = ORIGIN_SHARD_ATLAS_SPEC.widthM;
+  const spanM = Math.max(0, modelMaxX - modelMinX);
+  if (spanM >= widthM) return true;
+  const normalizedMinX = positiveModulo(modelMinX, widthM);
+  const normalizedMaxX = normalizedMinX + spanM;
+  return rangesIntersect(
+    normalizedMinX,
+    normalizedMaxX,
+    bounds.minX,
+    bounds.maxX,
+  ) || rangesIntersect(
+    normalizedMinX - widthM,
+    normalizedMaxX - widthM,
+    bounds.minX,
+    bounds.maxX,
+  );
+}
+
 function modelIntersectsBounds(
   model: WorldSpatialModelInstanceV1,
   bounds: WorldHorizontalBounds,
 ): boolean {
-  return model.boundsMetres.max[0] >= bounds.minX &&
-    model.boundsMetres.min[0] <= bounds.maxX &&
-    model.boundsMetres.max[2] >= bounds.minZ &&
-    model.boundsMetres.min[2] <= bounds.maxZ;
+  return wrappedModelXIntersectsBounds(
+    model.boundsMetres.min[0],
+    model.boundsMetres.max[0],
+    bounds,
+  ) && rangesIntersect(
+    model.boundsMetres.min[2],
+    model.boundsMetres.max[2],
+    bounds.minZ,
+    bounds.maxZ,
+  );
 }
 
 /** Assemble source-owner data into one exactly clipped destination zone. */

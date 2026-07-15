@@ -332,6 +332,20 @@ test("zone assembly wraps source ownership, clips geometry, and deduplicates can
     assert.ok(z >= 0 && z <= 100);
   }
   assert.equal(result.terrain.positions.at(-3), 100_000);
+
+  const wrappedResult = assembleWorldZoneGeometry({
+    destination: { tile: { tx: 0, tz: 0 }, zx: 0, zz: 0 },
+    tiles: [west, east],
+    metresPerCell: 5,
+  });
+  assert.equal(wrappedResult.models.length, 1);
+  assert.equal(wrappedResult.models[0].instance.instanceId, "seam-tree");
+  assert.deepEqual(wrappedResult.models[0].clipBounds, {
+    minX: 0,
+    minZ: 0,
+    maxX: 100,
+    maxZ: 100,
+  });
 });
 
 test("zone assembly reports a large intersecting model's remote canonical owner", () => {
