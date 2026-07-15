@@ -269,6 +269,35 @@ test("ordered edits replay identically at shared positions and extend slab mater
   assert.equal(coarse.materials[coarseIndex], 20);
 });
 
+test("wrapped flora placements materialize at their canonical local position", () => {
+  const editAsset = modelAssetRef("f".repeat(64));
+  const materialized = materializeWorldLocalZone({
+    key: chunkKey(1, 0, localZone(0, 0, 0, 0, 0, 0)),
+    tiles: [tile(99, 0), tile(0, 0)],
+    edits: [{
+      schemaVersion: 1,
+      id: "wrapped-flora",
+      worldId: "origin-shard",
+      atlasRevision: "origin-shard-2026-07-v1",
+      operations: [{
+        kind: "floraPlace",
+        instanceId: "wrapped-oak",
+        assetRef: editAsset,
+        position: [100_001, 18, 5],
+      }],
+    }],
+  });
+
+  assert.ok(materialized);
+  assert.deepEqual(materialized.floraInstances, [{
+    instanceId: "wrapped-oak",
+    assetRef: editAsset,
+    position: [1, 18, 5],
+    scale: 1,
+    source: "edit",
+  }]);
+});
+
 test("a remote edit envelope does not materialize an unrelated vertical slab", () => {
   const address = localZone(0, 0, 1, 1, 1, 1);
   const edits = [{
@@ -340,6 +369,15 @@ test("zone assembly wraps source ownership, clips geometry, and deduplicates can
   });
   assert.equal(wrappedResult.models.length, 1);
   assert.equal(wrappedResult.models[0].instance.instanceId, "seam-tree");
+  assert.equal(wrappedResult.models[0].wrapOffsetXMetres, -100_000);
+  assert.deepEqual(
+    wrappedResult.models[0].renderTransform.translationMetres,
+    [-1, 18, 50],
+  );
+  assert.deepEqual(wrappedResult.models[0].renderBoundsMetres, {
+    min: [-5, 18, 45],
+    max: [5, 30, 55],
+  });
   assert.deepEqual(wrappedResult.models[0].clipBounds, {
     minX: 0,
     minZ: 0,
@@ -523,6 +561,7 @@ test("resource eviction preserves models until every earlier unpinned category",
     dispose: () => disposed.push("pinned-too-large"),
   }), /exceed/i);
   assert.equal(disposed.filter((id) => id === "pinned-too-large").length, 1);
+  assert.equal(manager.has("model"), true);
 });
 
 test("a thousand-zone traversal remains bounded with unique work and exact disposal", () => {

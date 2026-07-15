@@ -18,6 +18,7 @@ const ZONE_FIELD_COUNT = 29;
 const ZONE_BYTES = ZONE_FIELD_COUNT * 4;
 const MAX_TILE_BINARY_BYTES = 8 * 1024 * 1024;
 const MAX_MODEL_COUNT = 4_096;
+const MAX_MODEL_LOD_DISTANCE_COUNT = 16;
 const SHA256_PATTERN = /^[a-f0-9]{64}$/u;
 const TOKEN_PATTERN = /^[a-z0-9][a-z0-9._-]{0,127}$/u;
 
@@ -97,6 +98,21 @@ function assertToken(value: unknown, name: string): asserts value is string {
   }
 }
 
+function assertFiniteTuple(
+  value: unknown,
+  length: number,
+  name: string,
+): asserts value is readonly number[] {
+  if (!Array.isArray(value) || value.length !== length) {
+    throw new Error(`${name} must contain exactly ${length} finite numbers`);
+  }
+  for (const coordinate of value) {
+    if (typeof coordinate !== "number" || !Number.isFinite(coordinate)) {
+      throw new Error(`${name} must contain exactly ${length} finite numbers`);
+    }
+  }
+}
+
 function validateModels(
   value: unknown,
 ): asserts value is readonly WorldSpatialModelInstanceV1[] {
@@ -128,8 +144,63 @@ function validateModels(
       throw new Error("Spatial model intersectingTiles must be an array");
     }
     for (const tile of candidate.intersectingTiles) normalizeWorldTileKey(tile);
-    if (!candidate.transform || !candidate.boundsMetres) {
+    if (
+      !candidate.transform ||
+      typeof candidate.transform !== "object" ||
+      !candidate.boundsMetres ||
+      typeof candidate.boundsMetres !== "object"
+    ) {
       throw new Error("Spatial model transform and boundsMetres are required");
+    }
+    assertFiniteTuple(
+      candidate.transform.translationMetres,
+      3,
+      "spatialModels.transform.translationMetres",
+    );
+    assertFiniteTuple(
+      candidate.transform.rotationQuaternion,
+      4,
+      "spatialModels.transform.rotationQuaternion",
+    );
+    assertFiniteTuple(
+      candidate.transform.scale,
+      3,
+      "spatialModels.transform.scale",
+    );
+    assertFiniteTuple(
+      candidate.boundsMetres.min,
+      3,
+      "spatialModels.boundsMetres.min",
+    );
+    assertFiniteTuple(
+      candidate.boundsMetres.max,
+      3,
+      "spatialModels.boundsMetres.max",
+    );
+    for (let axis = 0; axis < 3; axis += 1) {
+      if (candidate.boundsMetres.min[axis]! > candidate.boundsMetres.max[axis]!) {
+        throw new Error("spatialModels.boundsMetres min must not exceed max");
+      }
+    }
+    if (
+      !Array.isArray(candidate.lodDistancesM) ||
+      candidate.lodDistancesM.length > MAX_MODEL_LOD_DISTANCE_COUNT
+    ) {
+      throw new Error("Spatial model lodDistancesM must be a bounded array");
+    }
+    let previousDistance = -1;
+    for (const distance of candidate.lodDistancesM) {
+      if (
+        typeof distance !== "number" ||
+        !Number.isFinite(distance) ||
+        distance < 0 ||
+        distance <= previousDistance
+      ) {
+        throw new Error(
+          "Spatial model lodDistancesM must be finite, non-negative, and increasing",
+        );
+      }
+      previousDistance = distance;
     }
   }
 }

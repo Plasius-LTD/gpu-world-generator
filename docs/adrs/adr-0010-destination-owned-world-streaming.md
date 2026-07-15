@@ -33,8 +33,10 @@ Use destination-owned assembly with expanded source queries.
 - Shared world-space density samples are evaluated from the same atlas and edit
   revision so 0.5 m and 1 m materializations agree where their lattices align.
 - A discrete model has one canonical owner and one `ModelAssetRef`. Intersecting
-  destinations reference the same stable instance and apply clip planes; they
-  do not duplicate model bytes. Existing asset-contract partition metadata is
+  destinations reference the same stable instance and apply clip planes. Seam
+  destinations also receive a wrapped render transform and bounds while
+  retaining canonical asset identity; they do not duplicate model bytes.
+  Existing asset-contract partition metadata is
   used for exceptionally large assets.
 - View planning uses the lean 0.5 m, 1 m, 5 m, 25 m, and 100 m ladder, 20%
   hysteresis, one velocity-directed prefetch ring, obsolete-work cancellation,

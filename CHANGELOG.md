@@ -23,7 +23,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
     coarse fallbacks, and low/standard/high hard residency budgets.
   - Added edit-aware 0.5 m and 1 m local-zone slab materialization, stable flora
     reconstruction, destination-clipped terrain/fluid assembly, canonical model
-    deduplication, and a hard-budget resource residency coordinator.
+    deduplication with seam-safe render transforms, and a hard-budget resource
+    residency coordinator with non-destructive admission checks.
+  - Hardened tile decoding for nested model transforms, bounds, and LOD hints,
+    and normalized wrapped flora edit placement during reconstruction.
   - Added ADR-0009, ADR-0010, TDR-0003, and TDR-0004 for finite atlas
     addressing, immutable bakes, destination ownership, and streaming.
 

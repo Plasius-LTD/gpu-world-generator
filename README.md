@@ -27,7 +27,8 @@ from their local voxel materialization. The shipped `origin-shard` contract is a
 `createWorldAtlasBakePlan(...)` and `bakeWorldAtlas(...)` deterministically
 derive the overview, climate, hydrology, geology, biome/flora profiles, and
 content-addressed tile binaries. `decodeWorldTile(...)` validates an untrusted
-tile and can verify its SHA-256 content hash. Address helpers use half-open
+tile, including nested model transforms, bounds, and LOD hints, and can verify
+its SHA-256 content hash. Address helpers use half-open
 bounds so each point has one owner; X wraps modulo 100,000 m and Z clamps to the
 logical polar interval.
 
@@ -90,7 +91,9 @@ world-space density/material sampler, replay ordered edits, consume persisted
 geology, and reconstruct stable flora instances from profile seeds plus
 canonical model references. `assembleWorldZoneGeometry(...)` loads the sampling
 halo and spatial-model owners, deduplicates stable model ids, and emits terrain,
-fluid, and model clip planes against the destination zone.
+fluid, and model clip planes against the destination zone. Each clipped model
+retains its canonical asset identity while exposing a wrapped render transform
+and bounds for destinations across the east-west seam.
 
 ```js
 import {
@@ -125,7 +128,8 @@ const mesh = assembleWorldZoneGeometry({
 `WorldResourceResidencyManager` accounts caller-owned CPU/GPU resources,
 enforces concurrent-generation limits, respects pins and references, evicts in
 the documented far-to-model order, and invokes every disposal callback at most
-once.
+once. Admission rejects resources that cannot coexist with protected residents
+before evicting any valid cache entry.
 
 The package's hex zoning helpers remain supported as a legacy LOD and terrain
 facility. Hex cells are not persistent world addresses and do not replace the

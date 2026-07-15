@@ -1,4 +1,8 @@
-import type { ModelAssetRef } from "@plasius/asset-contracts";
+import type {
+  ModelAssetRef,
+  ModelBoundsMetres,
+  ModelTransform,
+} from "@plasius/asset-contracts";
 
 import {
   ORIGIN_SHARD_ATLAS_SPEC,
@@ -775,17 +779,24 @@ function reconstructFlora(
   }
   for (const edit of edits) {
     for (const operation of edit.operations) {
+      const normalizedX = operation.kind === "floraPlace"
+        ? positiveModulo(operation.position[0], ORIGIN_SHARD_ATLAS_SPEC.widthM)
+        : 0;
       if (
         operation.kind === "floraPlace" &&
-        operation.position[0] >= bounds.minX &&
-        operation.position[0] < bounds.maxX &&
+        normalizedX >= bounds.minX &&
+        normalizedX < bounds.maxX &&
         operation.position[2] >= bounds.minZ &&
         operation.position[2] < bounds.maxZ
       ) {
         result.push(Object.freeze({
           instanceId: operation.instanceId,
           assetRef: operation.assetRef,
-          position: operation.position,
+          position: Object.freeze([
+            normalizedX,
+            operation.position[1],
+            operation.position[2],
+          ] as const),
           scale: 1,
           source: "edit",
         }));
@@ -925,9 +936,14 @@ export interface WorldZoneMeshV1 {
   readonly indices: Uint32Array;
 }
 
-/** One canonical model rendered through destination clip planes. */
+/** One canonical model and its wrapped render-space view for destination clipping. */
 export interface WorldClippedSpatialModelV1 {
+  /** Canonical identity used to acquire one shared model asset. */
   readonly instance: WorldSpatialModelInstanceV1;
+  /** East-west wrap offset applied only to this destination's render view. */
+  readonly wrapOffsetXMetres: number;
+  readonly renderTransform: ModelTransform;
+  readonly renderBoundsMetres: ModelBoundsMetres;
   readonly clipBounds: WorldHorizontalBounds;
   readonly clipPlanes: readonly (readonly [number, number, number, number])[];
 }
@@ -991,38 +1007,36 @@ function rangesIntersect(
   return leftMax >= rightMin && leftMin <= rightMax;
 }
 
-function wrappedModelXIntersectsBounds(
+function modelWrapOffsetXMetres(
   modelMinX: number,
   modelMaxX: number,
   bounds: WorldHorizontalBounds,
-): boolean {
+): number | undefined {
   const widthM = ORIGIN_SHARD_ATLAS_SPEC.widthM;
   const spanM = Math.max(0, modelMaxX - modelMinX);
-  if (spanM >= widthM) return true;
   const normalizedMinX = positiveModulo(modelMinX, widthM);
-  const normalizedMaxX = normalizedMinX + spanM;
-  return rangesIntersect(
-    normalizedMinX,
-    normalizedMaxX,
+  const canonicalOffsetX = normalizedMinX - modelMinX;
+  return [
+    canonicalOffsetX,
+    canonicalOffsetX - widthM,
+    canonicalOffsetX + widthM,
+  ].find((offsetX) => rangesIntersect(
+    modelMinX + offsetX,
+    modelMinX + offsetX + spanM,
     bounds.minX,
     bounds.maxX,
-  ) || rangesIntersect(
-    normalizedMinX - widthM,
-    normalizedMaxX - widthM,
-    bounds.minX,
-    bounds.maxX,
-  );
+  ));
 }
 
 function modelIntersectsBounds(
   model: WorldSpatialModelInstanceV1,
   bounds: WorldHorizontalBounds,
 ): boolean {
-  return wrappedModelXIntersectsBounds(
+  return modelWrapOffsetXMetres(
     model.boundsMetres.min[0],
     model.boundsMetres.max[0],
     bounds,
-  ) && rangesIntersect(
+  ) !== undefined && rangesIntersect(
     model.boundsMetres.min[2],
     model.boundsMetres.max[2],
     bounds.minZ,
@@ -1115,7 +1129,41 @@ export function assembleWorldZoneGeometry(
       instanceId === model.instanceId)) {
       throw new Error(`Spatial model ${model.instanceId} is missing its canonical owner`);
     }
-    models.push(Object.freeze({ instance: model, clipBounds: bounds, clipPlanes }));
+    const wrapOffsetXMetres = modelWrapOffsetXMetres(
+      model.boundsMetres.min[0],
+      model.boundsMetres.max[0],
+      bounds,
+    );
+    if (wrapOffsetXMetres === undefined) continue;
+    const renderTransform: ModelTransform = Object.freeze({
+      translationMetres: Object.freeze([
+        model.transform.translationMetres[0] + wrapOffsetXMetres,
+        model.transform.translationMetres[1],
+        model.transform.translationMetres[2],
+      ] as const),
+      rotationQuaternion: model.transform.rotationQuaternion,
+      scale: model.transform.scale,
+    });
+    const renderBoundsMetres: ModelBoundsMetres = Object.freeze({
+      min: Object.freeze([
+        model.boundsMetres.min[0] + wrapOffsetXMetres,
+        model.boundsMetres.min[1],
+        model.boundsMetres.min[2],
+      ] as const),
+      max: Object.freeze([
+        model.boundsMetres.max[0] + wrapOffsetXMetres,
+        model.boundsMetres.max[1],
+        model.boundsMetres.max[2],
+      ] as const),
+    });
+    models.push(Object.freeze({
+      instance: model,
+      wrapOffsetXMetres,
+      renderTransform,
+      renderBoundsMetres,
+      clipBounds: bounds,
+      clipPlanes,
+    }));
   }
   models.sort((left, right) => left.instance.instanceId.localeCompare(right.instance.instanceId));
   return Object.freeze({
@@ -1213,6 +1261,24 @@ export class WorldResourceResidencyManager {
     }
     assertNonNegativeInteger(resource.referenceCount ?? 0, "referenceCount");
     const existing = this.#resources.get(resource.id);
+    let protectedCpuBytes = 0;
+    let protectedGpuBytes = 0;
+    for (const current of this.#resources.values()) {
+      if (
+        current.id !== resource.id &&
+        (current.pinned || current.referenceCount > 0)
+      ) {
+        protectedCpuBytes += current.cpuBytes;
+        protectedGpuBytes += current.gpuBytes;
+      }
+    }
+    if (
+      protectedCpuBytes + resource.cpuBytes > this.#budget.maxCpuBytes ||
+      protectedGpuBytes + resource.gpuBytes > this.#budget.maxGpuBytes
+    ) {
+      resource.dispose();
+      throw new Error("Pinned or referenced resources exceed the residency budget");
+    }
     if (existing !== undefined) this.#evictEntry(existing);
     const entry: ResidentEntry = {
       ...resource,

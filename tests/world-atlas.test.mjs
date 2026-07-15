@@ -11,6 +11,7 @@ import {
   bakeWorldAtlas,
   createWorldAtlasBakePlan,
   decodeWorldTile,
+  encodeWorldTile,
   generateWorldAtlasMacroGrid,
   getWorldEditDirtyAddresses,
   normalizeWorldAtlasPosition,
@@ -224,6 +225,52 @@ test("partial deterministic bakes preserve global diagnostics and verified tile 
   const fieldsOffset = corruptView.getUint32(36, true);
   corruptView.setFloat32(fieldsOffset + 11 * 4, 0.5, true);
   await assert.rejects(decodeWorldTile(corruptEnum), /waterKind|integer/i);
+
+  const modelBinary = encodeWorldTile({
+    ...captured[0].tile,
+    spatialModels: [{
+      schemaVersion: 1,
+      instanceId: "codec-model",
+      ownerTile: { tx: 0, tz: 0 },
+      intersectingTiles: [{ tx: 0, tz: 0 }],
+      assetRef: {
+        contractVersion: 1,
+        assetId: "codec-model",
+        version: "1.0.0",
+        kind: "leaf",
+        contentHash: "a".repeat(64),
+        runtimeManifestUri: "models/codec-model/manifest.json",
+      },
+      transform: {
+        translationMetres: [99_999, 18, 50],
+        rotationQuaternion: [0, 0, 0, 1],
+        scale: [1, 1, 1],
+      },
+      boundsMetres: {
+        min: [99_995, 18, 45],
+        max: [100_005, 30, 55],
+      },
+      lodDistancesM: [50, 150],
+    }],
+  });
+  const corruptBounds = modelBinary.slice(0);
+  const corruptBoundsView = new DataView(corruptBounds);
+  const modelStart = 48 + corruptBoundsView.getUint32(24, true)
+    + corruptBoundsView.getUint32(28, true);
+  const modelLength = corruptBoundsView.getUint32(32, true);
+  const modelText = new TextDecoder().decode(
+    new Uint8Array(corruptBounds, modelStart, modelLength),
+  );
+  const invalidCoordinate = modelText.indexOf("99995");
+  assert.ok(invalidCoordinate >= 0);
+  new Uint8Array(corruptBounds).set(
+    new TextEncoder().encode("null "),
+    modelStart + invalidCoordinate,
+  );
+  await assert.rejects(
+    decodeWorldTile(corruptBounds),
+    /boundsMetres.*finite|finite.*boundsMetres/i,
+  );
 });
 
 test("river networks preserve order and continuous geological support", () => {

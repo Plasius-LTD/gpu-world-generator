@@ -54,7 +54,8 @@ coarser representation until the finer work completes.
    bounds. Boundary samples may be read from a neighbour, but ownership remains
    with exactly one destination.
 5. Models retain one asset acquisition and render through destination clip
-   planes. Assets marked partitioned by the canonical asset contract may load
+   planes. Wrapped destinations apply the emitted render-space X offset before
+   clipping while canonical identity remains stable. Assets marked partitioned by the canonical asset contract may load
    only their intersecting partitions.
 
 ## Eviction and Pinning
