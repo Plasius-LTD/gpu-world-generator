@@ -10,3 +10,4 @@
 - [ADR-0008: Fluid-Aware Voxel Rendering](./adr-0008-fluid-aware-voxel-rendering.md)
 - [ADR-0009: Finite Wrapped World Atlas](./adr-0009-finite-wrapped-world-atlas.md)
 - [ADR-0010: Destination-Owned World Streaming](./adr-0010-destination-owned-world-streaming.md)
+- [ADR-0011: Hosted OIDC Package Publication](./adr-0011-hosted-oidc-package-publication.md)
