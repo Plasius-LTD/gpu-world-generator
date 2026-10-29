@@ -19,6 +19,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - (placeholder)
 
 - **Security**
+  - Restrict CI to exact-repository branch push/manual events on approved self-hosted capacity, with credential-free checkout, disabled implicit caches, timeouts and per-ref cancellation.
+  - Update the vulnerable transitive brace-expansion resolution from 5.0.9 to 5.0.12 without changing runtime dependency ranges.
   - Removed the npm write-token path, added a fail-closed npm 11.5.1-or-newer OIDC guard, and denied fork PR code access to reviewed CI.
   - Moved reviewed CI to explicit GitHub-hosted runners while retaining the same-repository pull-request guard.
   - Added fail-closed source and npm-package admission for the administrative contributor registry and pinned the CI/CD runtime to Node.js 24.18.0 LTS.
