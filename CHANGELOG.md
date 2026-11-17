@@ -6,23 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-- **Added**
-  - (placeholder)
+### Fixed
+
+- Restore automatic schema-template npm publication and validate renewed trusted publishing with a sealed package inventory.
 
 - **Changed**
   - Refreshed compatible @plasius/* lockfile resolutions to the latest published releases.
  - Bound npm publication to the exact prepared `main` commit after successful push-triggered CI.
-  - (placeholder)
 
 - **Fixed**
   - Added exact-commit CI dispatch and disabled package-manager cache finalization in both hosted validation jobs.
-  - (placeholder)
 
 - **Security**
   - Removed the npm write-token path, added a fail-closed npm 11.5.1-or-newer OIDC guard, and denied fork PR code access to reviewed CI.
   - Moved reviewed CI to explicit GitHub-hosted runners while retaining the same-repository pull-request guard.
   - Added fail-closed source and npm-package admission for the administrative contributor registry and pinned the CI/CD runtime to Node.js 24.18.0 LTS.
-  - (placeholder)
 
 ## [0.1.0] - 2026-07-15
 
@@ -57,30 +55,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
     asset references.
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.27] - 2026-07-13
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
-  - (placeholder)
   - Consume the propagated gpu-shared and RFC-remediated translation releases (task #36).
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.26] - 2026-07-11
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
   - Updated runtime and development dependency baselines to the latest
@@ -93,10 +84,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
     rejected by npm's peer-dependency resolver.
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.25] - 2026-07-03
 
@@ -115,7 +104,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Added `@plasius/gpu-fluid` as the fluid integration dependency.
   - Added ADR-0007, ADR-0008, and voxel-world design documentation for voxel
     authority and fluid-aware rendering.
-  - (placeholder)
 
 - **Changed**
   - Repositioned voxel chunks as the preferred authoritative world path while
@@ -130,43 +118,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
     water, lava, and sludge render through separate fluid surfaces instead of
     terrain triangles.
   - Updated the demo to report and draw terrain and fluid surfaces separately.
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.24] - 2026-07-01
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
   - Updated runtime GPU dependencies to `@plasius/gpu-shared` `^1.0.2` and
     `@plasius/gpu-worker` `^0.3.4`.
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.23] - 2026-06-22
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.22] - 2026-06-22
 
@@ -185,82 +162,60 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Fixed**
   - Restored the package CD workflow so protected main releases are prepared by PR and published without direct branch pushes.
   - Exported the root `dist/index.d.ts` declaration entry for NodeNext TypeScript consumers and pack-time validation.
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.17] - 2026-05-13
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.16] - 2026-05-13
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.15] - 2026-05-11
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
-  - (placeholder)
 
 - **Fixed**
   - Parenthesized terrain hash multiplication terms before xor mixing so
     browsers accept assembled WGSL worker shaders.
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.14] - 2026-04-02
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.13] - 2026-03-23
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.12] - 2026-03-15
 
@@ -276,10 +231,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - TDR-0002 now reflects the implemented public representation-plan helper.
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.11] - 2026-03-14
 
@@ -301,24 +254,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
     the Codecov CLI.
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.10] - 2026-03-04
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.6] - 2026-03-01
 
@@ -337,44 +284,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [0.0.5] - 2026-02-28
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.5] - 2026-02-28
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.4] - 2026-02-12
 
 - **Added**
-  - (placeholder)
 
 - **Changed**
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 
 ## [0.0.3] - 2026-02-12
 
@@ -392,13 +327,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Initial release.
 
 - **Changed**
-  - (placeholder)
 
 - **Fixed**
-  - (placeholder)
 
 - **Security**
-  - (placeholder)
 [0.0.3]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.3
 [0.0.4]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.4
 [0.0.5]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.5
