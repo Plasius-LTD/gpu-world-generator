@@ -1,6 +1,6 @@
 {
   "name": "@plasius/gpu-world-generator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Deterministic persistent-atlas and voxel world generation with GPU helpers.",
   "type": "module",
   "sideEffects": false,

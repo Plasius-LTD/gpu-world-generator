@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-17
+
 ### Fixed
 
 - Restore automatic schema-template npm publication and validate renewed trusted publishing with a sealed package inventory.
@@ -350,3 +352,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.0.26]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.26
 [0.0.27]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.0.27
 [0.1.0]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.1.0
+
+[Unreleased]: https://github.com/Plasius-LTD/gpu-world-generator/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/Plasius-LTD/gpu-world-generator/releases/tag/v0.1.1
