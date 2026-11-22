@@ -43,13 +43,13 @@
     "test:privacy": "node --experimental-test-coverage --test-coverage-include=scripts/private-artifact-policy.cjs --test-coverage-lines=80 --test-coverage-functions=80 --test-coverage-branches=60 --test tests/private-artifact-policy.test.cjs tests/schema-release.test.cjs"
   },
   "dependencies": {
-    "@plasius/asset-contracts": "^0.4.0",
-    "@plasius/gpu-fluid": "^0.1.12",
-    "@plasius/gpu-shared": "^1.1.1",
-    "@plasius/gpu-worker": "^0.3.4"
+    "@plasius/asset-contracts": "^0.8.3",
+    "@plasius/gpu-fluid": "^0.1.14",
+    "@plasius/gpu-shared": "^1.11.2",
+    "@plasius/gpu-worker": "^0.3.6"
   },
   "peerDependencies": {
-    "@plasius/translations": "^1.0.23"
+    "@plasius/translations": "^1.0.30"
   },
   "peerDependenciesMeta": {
     "@plasius/translations": {
@@ -58,15 +58,15 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@plasius/translations": "^1.0.23",
-    "@types/node": "^26.4.0",
-    "@typescript-eslint/eslint-plugin": "^8.69.0",
-    "@typescript-eslint/parser": "^8.69.0",
-    "c8": "^11.0.0",
-    "eslint": "^10.9.1",
-    "globals": "^17.11.0",
-    "react": "^19.2.8",
-    "tsup": "^8.5.1",
+    "@plasius/translations": "^1.0.30",
+    "@types/node": "^26.6.6",
+    "@typescript-eslint/eslint-plugin": "^8.73.0",
+    "@typescript-eslint/parser": "^8.73.0",
+    "c8": "^12.0.0",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "react": "^19.3.1",
+    "tsup": "^9.0.0",
     "typescript": "^6.0.3"
   },
   "license": "Apache-2.0",
@@ -83,7 +83,8 @@
   "homepage": "https://github.com/Plasius-LTD/gpu-world-generator#readme",
   "overrides": {
     "esbuild": "^0.28.1",
-    "minimatch": "^10.2.1"
+    "minimatch": "^11.0.9",
+    "glob": "^14.0.6"
   },
   "engines": {
     "node": ">=24"
